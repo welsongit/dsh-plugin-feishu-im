@@ -128,4 +128,23 @@ assert.deepEqual(first.sessionIds, ['session-feishuold'], 'adoption is idempoten
 assert.equal(sessions.expandHome('~/dsh-plugin-feishu-im').endsWith('/dsh-plugin-feishu-im'), true)
 assert.equal(sessions.expandHome('/abs/path'), '/abs/path')
 
+// Windows has no HOME; the home directory lives in USERPROFILE. Expanding from
+// an empty home used to collapse `~/x` into a root-relative `/x`, which Windows
+// resolved to the drive root instead of the user's profile.
+{
+  const savedHome = process.env.HOME
+  const savedProfile = process.env.USERPROFILE
+  try {
+    delete process.env.HOME
+    process.env.USERPROFILE = 'C:\\Users\\me'
+    assert.equal(sessions.expandHome('~/dsh-plugin-feishu-im'), 'C:\\Users\\me/dsh-plugin-feishu-im')
+    assert.equal(sessions.expandHome('~'), 'C:\\Users\\me')
+  } finally {
+    if (savedHome === undefined) delete process.env.HOME
+    else process.env.HOME = savedHome
+    if (savedProfile === undefined) delete process.env.USERPROFILE
+    else process.env.USERPROFILE = savedProfile
+  }
+}
+
 console.log('sessions smoke: all cases passed')

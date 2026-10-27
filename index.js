@@ -352,11 +352,18 @@ export function apply(ctx) {
       if (body.allowedOpenIds !== undefined) next.allowedOpenIds = asStringList(body.allowedOpenIds)
       if (body.allowCommands !== undefined) next.allowCommands = body.allowCommands !== false
       if (body.answerMode !== undefined) next.answerMode = body.answerMode === 'both' ? 'both' : 'feishu'
+      if (body.defaultPermission !== undefined) {
+        const mode = asString(body.defaultPermission)
+        if (!PERMISSION_MODES[mode]) throw new Error('未知的权限模式')
+        next.defaultPermission = mode
+      }
       if (body.sessionCwd !== undefined) {
         const cwd = asString(body.sessionCwd)
         if (!cwd) throw new Error('工作文件夹不能为空')
-        const expanded = cwd.startsWith('~') ? cwd : (cwd.startsWith('/') ? cwd : '')
-        if (!expanded) throw new Error('工作文件夹需要是绝对路径，或以 ~/ 开头')
+        // `~/…` is expanded later; otherwise require an absolute path. Windows
+        // drive paths (`D:\…`, `D:/…`) are absolute too and must be accepted.
+        const absolute = cwd.startsWith('~') || cwd.startsWith('/') || /^[A-Za-z]:[\\/]/.test(cwd) || /^\\\\/.test(cwd)
+        if (!absolute) throw new Error('工作文件夹需要是绝对路径，或以 ~/ 开头')
         next.sessionCwd = cwd
       }
       if (body.workspaceTitle !== undefined) {

@@ -60,7 +60,7 @@
     }
   },
   "scripts": {
-    "test": "node scripts/tool-schema.mjs && node scripts/inbound-smoke.mjs && node scripts/target-smoke.mjs && node scripts/permissions-smoke.mjs && node scripts/permission-flow-smoke.mjs && node scripts/answers-smoke.mjs && node scripts/sessions-smoke.mjs && node scripts/session-card-smoke.mjs && node scripts/service-smoke.mjs && node scripts/table-card-smoke.mjs && node scripts/render-smoke.mjs",
+    "test": "node scripts/tool-schema.mjs && node scripts/inbound-smoke.mjs && node scripts/target-smoke.mjs && node scripts/permissions-smoke.mjs && node scripts/permission-flow-smoke.mjs && node scripts/answers-smoke.mjs && node scripts/sessions-smoke.mjs && node scripts/session-card-smoke.mjs && node scripts/prefs-smoke.mjs && node scripts/service-smoke.mjs && node scripts/table-card-smoke.mjs && node scripts/render-smoke.mjs",
     "test:render": "node scripts/render-ssr.mjs",
     "test:live": "node scripts/cards-live.mjs",
     "test:timeout": "node scripts/timeout-live.mjs"
